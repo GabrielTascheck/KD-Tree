@@ -4,15 +4,9 @@
 
 int main()
 {
-
-  size_t k, n;
-
-  printf("\nN: ");
-  scanf("%zu", &n);
-  printf("\nK: ");
-  scanf("%zu", &k);
-
-  struct nodo *raiz = criarKD(n,k);
+  struct tree *raiz = criarKD();
+  if(!raiz)
+    return 1;
   char op;
   scanf(" %c", &op);
 

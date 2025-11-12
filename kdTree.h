@@ -18,7 +18,7 @@ struct tree
   struct nodo *raiz;
 };
 
-struct tree *criarKD(size_t n, size_t k);
+struct tree *criarKD();
 
 void inserirKD(struct tree *tree, struct nodo *novo);
 

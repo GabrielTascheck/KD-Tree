@@ -24,8 +24,16 @@ struct nodo *criarNodoKD(size_t k)
     return novo;
 }
 
-struct tree *criarKD(size_t n, size_t k)
+struct tree *criarKD()
 {
+    size_t n = 0;
+    size_t k = 0;
+
+    printf("\nN: ");
+    scanf("%zu", &n);
+    printf("\nK: ");
+    scanf("%zu", &k);
+
     if (n < 1 || k < 1)
         return NULL;
 
@@ -42,7 +50,7 @@ struct tree *criarKD(size_t n, size_t k)
 
     scanf(" %d", &primNodo->classe);
 
-    struct tree *tree;
+    struct tree *tree = malloc(sizeof(struct tree));
     tree->raiz = primNodo;
     tree->k = k;
 
@@ -78,22 +86,22 @@ void inserirKD(struct tree *tree, struct nodo *novo)
     size_t indexCoord = 0;
     size_t chave = indexCoord;
 
-    while(atual)
+    while (atual)
     {
         pai = atual;
-        if(novo->coord[indexCoord] < atual->coord[indexCoord])
+        if (novo->coord[indexCoord] < atual->coord[indexCoord])
             atual = atual->fe;
         else
             atual = atual->fd;
         chave = indexCoord;
-        indexCoord = (indexCoord+1) %  tree->k;
+        indexCoord = (indexCoord + 1) % tree->k;
     }
     novo->pai = pai;
-    if(!pai)
+    if (!pai)
         tree->raiz = novo;
     else
     {
-        if(novo->coord[chave] < pai->coord[chave])
+        if (novo->coord[chave] < pai->coord[chave])
             pai->fe = novo;
         else
             pai->fd = novo;
@@ -101,20 +109,16 @@ void inserirKD(struct tree *tree, struct nodo *novo)
 }
 struct nodo *bucarKD(struct tree raiz, float *coord)
 {
-
 }
 
 struct nodo **zVizinhosKD(struct tree raiz, float *coord, size_t z)
 {
-
 }
 
 void imprimirLarguraKD(struct tree raiz)
 {
-
 }
 
 void posOrdemFree(struct tree raiz)
 {
-
 }
