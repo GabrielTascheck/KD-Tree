@@ -1,10 +1,9 @@
-parametrosCompilacao=-Wall -Iinclude #-Wshadow
+parametrosCompilacao=-Wall -g #-Wshadow
 nomePrograma=prova4_20246230
-
 all: $(nomePrograma)
 
 $(nomePrograma): main.o kdTree.o fprio.o
-	gcc -o $(nomePrograma) main.o kdTree.o fprio.o $(parametrosCompilacao)
+	gcc -o $(nomePrograma) main.o kdTree.o fprio.o $(parametrosCompilacao) -lm
 
 main.o: main.c
 	gcc -c main.c $(parametrosCompilacao)
@@ -17,3 +16,8 @@ fprio.o: fprio.c fprio.h
 
 clean:
 	rm -f *.o *.gch $(nomePrograma)
+	
+
+gdb: $(nomePrograma)
+	gdb ./$(nomePrograma)
+

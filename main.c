@@ -22,8 +22,8 @@ int main()
         scanf(" %f", &coords[i]);
       }
       struct nodo *nodo = buscarKD(*raiz, raiz->raiz, coords, 0);
-      if(nodo)
-        printf("\nEncontrado. Classe %d",nodo->classe);
+      if (nodo)
+        printf("\nEncontrado. Classe %d", nodo->classe);
       else
         printf("\nNão Encontrado.");
       break;
@@ -32,18 +32,20 @@ int main()
       imprimirLarguraKD(*raiz);
       break;
     case 'z':
-      printf("\nOP Z\n");
-      float ponto[2] = {75,25};
-      struct nodo **melhores = zVizinhosKD(*raiz, ponto, 1);
-      printf("\nMELHOR: [%.2f, %.2f] (%d)",melhores[0]->coord[0], melhores[0]->coord[1], melhores[0]->classe);
+      size_t z = 9;
+      float ponto[2] = {100, 100};
+      struct nodo **melhores = zVizinhosKD(*raiz, ponto, z);
+      for (size_t i = 0; i < z; i++)
+        printf("\n%zu MELHOR: [%.2f, %.2f] (%c)", i, melhores[i]->coord[0], melhores[i]->coord[1], 'A' - 1 + melhores[i]->classe);
 
       break;
     default:
-      printf("Opcaoo Invalida\n");
+      printf("Opcao Invalida\n");
       break;
     }
     scanf(" %c", &op);
   }
 
+  printf("\n");
   return 0;
 }

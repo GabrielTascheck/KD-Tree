@@ -23,6 +23,7 @@ void imprimirNodo(struct tree tree, struct nodo nodo)
     }
     printf(" %.2f ]", nodo.coord[i]);
     printf(" (%d)", nodo.classe);
+    printf(" (%c)", 'A' - 1 + nodo.classe);
 }
 
 struct nodo *criarNodoKD(size_t k)
@@ -149,7 +150,7 @@ float distEuclidiana(float *coord1, float *coord2, size_t k)
     float dist = 0;
     for (size_t i = 0; i < k; i++)
         dist = dist + (coord1[i] - coord2[i]) * (coord1[i] - coord2[i]);
-    dist = sqrt(dist);
+    // dist = sqrt(dist);
     return dist;
 }
 
@@ -159,14 +160,15 @@ void zVizinhosKDWrapped(struct tree tree, struct nodo *raiz, size_t coord, float
         return;
 
     float dist = distEuclidiana(raiz->coord, ponto, tree.k);
-    if (raiz->fe == NULL && raiz->fd == NULL)
+    if (raiz->fe == NULL && raiz->fd == NULL) //raiz é folha
     {
-        if (fila->fim == NULL || dist < fila->fim->dist)
+        if (fila->qtd < z || dist < fila->fim->dist)
         {
             fprio_insere(fila, raiz, dist);
             if (fila->qtd > z)
                 fprio_removeUltimo(fila);
         }
+        return;
     }
     struct nodo *prim, *sec;
     if (ponto[coord] < raiz->coord[coord])
@@ -180,38 +182,47 @@ void zVizinhosKDWrapped(struct tree tree, struct nodo *raiz, size_t coord, float
         sec = raiz->fe;
     }
 
-    // O melhor vai vir daqui:
     zVizinhosKDWrapped(tree, prim, (coord + 1) % tree.k, ponto, z, fila);
 
-    if (fila->fim == NULL || dist < fila->fim->dist)
+    if (fila->qtd < z || dist < fila->fim->dist)
     {
         fprio_insere(fila, raiz, dist);
         if (fila->qtd > z)
             fprio_removeUltimo(fila);
     }
 
-    if (abs(raiz->coord[coord] - ponto[coord]) < fila->fim->dist)
-    {
+    float distBorda = fabs(raiz->coord[coord] - ponto[coord]);
+    distBorda *= distBorda;
+    if (fila->qtd < z ||  distBorda < fila->fim->dist)
         zVizinhosKDWrapped(tree, sec, (coord + 1) % tree.k, ponto, z, fila);
-    }
+    
 }
 
 struct nodo **zVizinhosKD(struct tree tree, float *ponto, size_t z)
 {
     struct filaPrio *fila = fprio_criar();
-    if(fila == NULL)
+    if (!fila)
         return NULL;
-    
+
     zVizinhosKDWrapped(tree, tree.raiz, 0, ponto, z, fila);
 
-    struct nodo **melhores = malloc(sizeof(struct nodo) * z);
-    if(melhores == NULL)
-        return NULL;
-
-    for(size_t i = z-1; i >= 0; i--)
+    struct nodo **melhores = malloc(sizeof(struct nodo *) * z);
+    if (!melhores)
     {
-        melhores[i] = fila->fim->nodo;
-        fprio_removeUltimo(fila);
+        fprio_destroi(fila);
+        return NULL;
+    }
+
+    for (long long i = z - 1; i >= 0; i--)
+    {
+        if (fila->qtd > 0) // Verifica se a fila não está vazia
+        {
+            melhores[i] = fprio_removeUltimo(fila);
+        }
+        else
+        {
+            melhores[i] = NULL; // Preenche o resto com NULL
+        }
     }
 
     fprio_destroi(fila);

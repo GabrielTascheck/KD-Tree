@@ -66,12 +66,13 @@ int fprio_insere(struct filaPrio *fila, struct nodo *nodo, float dist)
     return fila->qtd;
 }
 
-void fprio_removeUltimo(struct filaPrio *fila)
+struct nodo *fprio_removeUltimo(struct filaPrio *fila)
 {
-    if (!fila)
-        return;
+    if (!fila || fila->qtd == 0)
+        return NULL;
 
     struct filaNodo *itemFila = fila->fim;
+    struct nodo *nodo = itemFila->nodo;
 
     if (fila->qtd == 1)
     {
@@ -86,6 +87,8 @@ void fprio_removeUltimo(struct filaPrio *fila)
 
     free(itemFila);
     fila->qtd--;
+
+    return nodo;
 }
 
 struct filaPrio *fprio_destroi(struct filaPrio *fila)
