@@ -5,7 +5,7 @@
 int main()
 {
   struct tree *raiz = criarKD();
-  if(!raiz)
+  if (!raiz)
     return 1;
   char op;
   scanf(" %c", &op);
@@ -15,14 +15,27 @@ int main()
     switch (op)
     {
     case 'b':
-      printf("OP B\n");
+    {
+      float coords[raiz->k];
+      for (size_t i = 0; i < raiz->k; i++)
+      {
+        scanf(" %f", &coords[i]);
+      }
+      struct nodo *nodo = buscarKD(*raiz, raiz->raiz, coords, 0);
+      if(nodo)
+        printf("\nEncontrado. Classe %d",nodo->classe);
+      else
+        printf("\nNão Encontrado.");
       break;
+    }
     case 'l':
-      printf("OP L\n");
-
+      imprimirLarguraKD(*raiz);
       break;
     case 'z':
-      printf("OP Z\n");
+      printf("\nOP Z\n");
+      float ponto[2] = {75,25};
+      struct nodo **melhores = zVizinhosKD(*raiz, ponto, 1);
+      printf("\nMELHOR: [%.2f, %.2f] (%d)",melhores[0]->coord[0], melhores[0]->coord[1], melhores[0]->classe);
 
       break;
     default:
