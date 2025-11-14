@@ -30,10 +30,10 @@ struct nodo *criarNodoKD(size_t k)
 {
     struct nodo *novo = malloc(sizeof(struct nodo));
     if (!novo)
-        return NULL;
+        matarProgramaFaltaMemoria();
     novo->coord = malloc(sizeof(float) * k);
     if (!novo->coord)
-        return NULL;
+        matarProgramaFaltaMemoria();
     novo->classe = 0;
     novo->fd = NULL;
     novo->fe = NULL;
@@ -69,6 +69,8 @@ struct tree *criarKD()
     scanf(" %d", &primNodo->classe);
 
     struct tree *tree = malloc(sizeof(struct tree));
+    if(!tree)
+        matarProgramaFaltaMemoria();
     tree->raiz = primNodo;
     tree->k = k;
 
@@ -150,7 +152,7 @@ float distEuclidiana(float *coord1, float *coord2, size_t k)
     float dist = 0;
     for (size_t i = 0; i < k; i++)
         dist = dist + (coord1[i] - coord2[i]) * (coord1[i] - coord2[i]);
-    // dist = sqrt(dist);
+    dist = sqrt(dist);
     return dist;
 }
 
@@ -160,7 +162,7 @@ void zVizinhosKDWrapped(struct tree tree, struct nodo *raiz, size_t coord, float
         return;
 
     float dist = distEuclidiana(raiz->coord, ponto, tree.k);
-    if (raiz->fe == NULL && raiz->fd == NULL) //raiz é folha
+    if (raiz->fe == NULL && raiz->fd == NULL) // raiz é folha
     {
         if (fila->qtd < z || dist < fila->fim->dist)
         {
@@ -191,38 +193,42 @@ void zVizinhosKDWrapped(struct tree tree, struct nodo *raiz, size_t coord, float
             fprio_removeUltimo(fila);
     }
 
-    float distBorda = fabs(raiz->coord[coord] - ponto[coord]);
-    distBorda *= distBorda;
-    if (fila->qtd < z ||  distBorda < fila->fim->dist)
+    if (fila->qtd < z || fabs(raiz->coord[coord] - ponto[coord]) < fila->fim->dist)
         zVizinhosKDWrapped(tree, sec, (coord + 1) % tree.k, ponto, z, fila);
-    
 }
 
-struct nodo **zVizinhosKD(struct tree tree, float *ponto, size_t z)
+struct nodoDist **zVizinhosKD(struct tree tree, float *ponto, size_t z)
 {
+    if(z == 0)
+        return NULL;
     struct filaPrio *fila = fprio_criar();
     if (!fila)
         return NULL;
 
     zVizinhosKDWrapped(tree, tree.raiz, 0, ponto, z, fila);
 
-    struct nodo **melhores = malloc(sizeof(struct nodo *) * z);
+    struct nodoDist **melhores = malloc(sizeof(struct nodoDist *) * z);
     if (!melhores)
     {
-        fprio_destroi(fila);
-        return NULL;
+        matarProgramaFaltaMemoria();
     }
 
-    for (long long i = z - 1; i >= 0; i--)
+    for (size_t i = 0; i < z; i++)
     {
-        if (fila->qtd > 0) // Verifica se a fila não está vazia
+
+        melhores[i] = malloc(sizeof(struct nodoDist));
+        if(!melhores[i])
+            matarProgramaFaltaMemoria();
+        
+        if (fila->qtd > 0)
         {
-            melhores[i] = fprio_removeUltimo(fila);
+            melhores[i]->dist = fila->prim->dist;
+            melhores[i]->nodo = fprio_removePrimeiro(fila);
         }
+
         else
-        {
             melhores[i] = NULL; // Preenche o resto com NULL
-        }
+        
     }
 
     fprio_destroi(fila);

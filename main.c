@@ -32,13 +32,35 @@ int main()
       imprimirLarguraKD(*raiz);
       break;
     case 'z':
-      size_t z = 9;
-      float ponto[2] = {100, 100};
-      struct nodo **melhores = zVizinhosKD(*raiz, ponto, z);
-      for (size_t i = 0; i < z; i++)
-        printf("\n%zu MELHOR: [%.2f, %.2f] (%c)", i, melhores[i]->coord[0], melhores[i]->coord[1], 'A' - 1 + melhores[i]->classe);
+    {
+      size_t z = 0;
+      scanf(" %zu", &z);
+      float ponto[raiz->k];
+      
+      for (size_t i = 0; i < raiz->k; i++)
+      scanf(" %f", &ponto[i]);
+      
+      struct nodoDist **melhores = zVizinhosKD(*raiz, ponto, z);
 
+      if (melhores == NULL)
+        return 1;
+      for (size_t i = 0; i < z; i++)
+      {
+        if (melhores[i])
+        {
+          printf("\n");
+          imprimirNodo(*raiz, *melhores[i]->nodo);
+          printf(" dist = %f", melhores[i]->dist);
+        }
+        else
+        {
+          printf("\nZ maior que quantidade de nodos na árvore");
+        }
+        free(melhores[i]);
+      }
+      free(melhores);
       break;
+    }
     default:
       printf("Opcao Invalida\n");
       break;
@@ -46,6 +68,8 @@ int main()
     scanf(" %c", &op);
   }
 
+  posOrdemFree(raiz->raiz);
+  free(raiz);
   printf("\n");
   return 0;
 }

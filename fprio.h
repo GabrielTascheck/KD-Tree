@@ -25,6 +25,8 @@ int fprio_insere(struct filaPrio *fila, struct nodo *nodo, float dist);
 
 struct nodo *fprio_removeUltimo(struct filaPrio *fila);
 
+struct nodo *fprio_removePrimeiro(struct filaPrio *fila);
+
 struct filaPrio *fprio_destroi(struct filaPrio *f);
 
 #endif

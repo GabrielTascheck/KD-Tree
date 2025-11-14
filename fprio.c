@@ -91,6 +91,31 @@ struct nodo *fprio_removeUltimo(struct filaPrio *fila)
     return nodo;
 }
 
+struct nodo *fprio_removePrimeiro(struct filaPrio *fila)
+{
+    if (!fila || fila->qtd == 0)
+        return NULL;
+
+    struct filaNodo *itemFila = fila->prim;
+    struct nodo *nodo = itemFila->nodo;
+
+    if (fila->qtd == 1)
+    {
+        fila->prim = NULL;
+        fila->fim = NULL;
+    }
+    else
+    {
+        fila->prim = itemFila->prox;
+        itemFila->prox->ant = NULL;
+    }
+
+    free(itemFila);
+    fila->qtd--;
+
+    return nodo;
+}
+
 struct filaPrio *fprio_destroi(struct filaPrio *fila)
 {
     if (!fila)
