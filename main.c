@@ -23,9 +23,9 @@ int main()
       }
       struct nodo *nodo = buscarKD(*raiz, raiz->raiz, coords, 0);
       if (nodo)
-        printf("\nEncontrado. Classe %d", nodo->classe);
+        printf("Encontrado. Classe %d\n", nodo->classe);
       else
-        printf("\nNão Encontrado.");
+        printf("Não Encontrado.\n");
       break;
     }
     case 'l':
@@ -36,21 +36,24 @@ int main()
       size_t z = 0;
       scanf(" %zu", &z);
       float ponto[raiz->k];
-      
+
       for (size_t i = 0; i < raiz->k; i++)
-      scanf(" %f", &ponto[i]);
-      
+        scanf(" %f", &ponto[i]);
+
       struct nodoDist **melhores = zVizinhosKD(*raiz, ponto, z);
 
+      printf("Vizinhos mais proximos:\n");
       if (melhores == NULL)
-        return 1;
+        break;
+      ;
+
       for (size_t i = 0; i < z; i++)
       {
         if (melhores[i])
         {
-          printf("\n");
           imprimirNodo(*raiz, *melhores[i]->nodo);
-          printf(" dist = %f", melhores[i]->dist);
+          printf(", dist = %f", melhores[i]->dist);
+          printf("\n");
         }
         else
         {
@@ -59,6 +62,8 @@ int main()
         free(melhores[i]);
       }
       free(melhores);
+      printf("\n");
+
       break;
     }
     default:
@@ -70,6 +75,5 @@ int main()
 
   posOrdemFree(raiz->raiz);
   free(raiz);
-  printf("\n");
   return 0;
 }

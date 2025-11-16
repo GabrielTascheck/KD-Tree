@@ -15,15 +15,13 @@ void imprimirNodo(struct tree tree, struct nodo nodo)
 {
     if (tree.k == 0 || nodo.coord == NULL)
         return;
-    printf("[");
     size_t i;
     for (i = 0; i < tree.k - 1; i++)
     {
-        printf(" %.2f,", nodo.coord[i]);
+        printf("%.2f, ", nodo.coord[i]);
     }
-    printf(" %.2f ]", nodo.coord[i]);
-    printf(" (%d)", nodo.classe);
-    printf(" (%c)", 'A' - 1 + nodo.classe);
+    printf("%.2f", nodo.coord[i]);
+    printf(" (classe %d)", nodo.classe);
 }
 
 struct nodo *criarNodoKD(size_t k)
@@ -47,10 +45,8 @@ struct tree *criarKD()
     size_t n = 0;
     size_t k = 0;
 
-    // printf("\nN: ");
-    scanf("%zu", &n);
-    // printf("\nK: ");
-    scanf("%zu", &k);
+    printf("Insira N e K.\n");
+    scanf("%zu %zu", &n, &k);
 
     if (n < 1 || k < 1)
         return NULL;
@@ -59,6 +55,7 @@ struct tree *criarKD()
     if (!primNodo)
         return NULL;
 
+    printf("Insira os pontos.\n");
     for (size_t i = 0; i < k; i++)
     {
         // fprintf(stderr, "\nCoord %zu: ", i);
@@ -69,7 +66,7 @@ struct tree *criarKD()
     scanf(" %d", &primNodo->classe);
 
     struct tree *tree = malloc(sizeof(struct tree));
-    if(!tree)
+    if (!tree)
         matarProgramaFaltaMemoria();
     tree->raiz = primNodo;
     tree->k = k;
@@ -96,6 +93,7 @@ struct tree *criarKD()
         inserirKD(tree, novo);
     }
 
+    printf("Arvore construida.\n");
     return tree;
 }
 
@@ -130,9 +128,8 @@ void inserirKD(struct tree *tree, struct nodo *novo)
 struct nodo *buscarKD(struct tree tree, struct nodo *raiz, float *coord, size_t indexCoord)
 {
     if (tree.k == 0 || raiz == NULL)
-    {
         return NULL;
-    }
+
     size_t i = 0;
     for (i = 0; i < tree.k; i++)
         if (raiz->coord[i] != coord[i])
@@ -199,7 +196,7 @@ void zVizinhosKDWrapped(struct tree tree, struct nodo *raiz, size_t coord, float
 
 struct nodoDist **zVizinhosKD(struct tree tree, float *ponto, size_t z)
 {
-    if(z == 0)
+    if (z == 0)
         return NULL;
     struct filaPrio *fila = fprio_criar();
     if (!fila)
@@ -217,9 +214,9 @@ struct nodoDist **zVizinhosKD(struct tree tree, float *ponto, size_t z)
     {
 
         melhores[i] = malloc(sizeof(struct nodoDist));
-        if(!melhores[i])
+        if (!melhores[i])
             matarProgramaFaltaMemoria();
-        
+
         if (fila->qtd > 0)
         {
             melhores[i]->dist = fila->prim->dist;
@@ -228,7 +225,6 @@ struct nodoDist **zVizinhosKD(struct tree tree, float *ponto, size_t z)
 
         else
             melhores[i] = NULL; // Preenche o resto com NULL
-        
     }
 
     fprio_destroi(fila);
